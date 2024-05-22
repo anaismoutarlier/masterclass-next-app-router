@@ -1,10 +1,19 @@
 import React from "react";
-import { posts } from "@/static";
+// import { posts } from "@/static";
 
-export default function PostPage({ params: { postId } }) {
-  const post = posts.find(post => post.id === Number(postId));
+export default async function PostPage({ params: { postId } }) {
+  const res = await fetch(
+    `https://posts-api-yj1i.onrender.com/posts/${postId}`,
+    {
+      headers: {
+        apikey: process.env.POSTS_API_KEY,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const { result, post } = await res.json();
 
-  if (!post) return <div>No post found.</div>;
+  if (!result || !post) return <div>No post found.</div>;
   return (
     <div className="main">
       <div className="post">
